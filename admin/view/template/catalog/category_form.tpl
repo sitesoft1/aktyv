@@ -181,9 +181,9 @@
                         <div class="checkbox">
                             <label>
                                 <?php if (!empty($roz_status)) { ?>
-                                    <input type="checkbox" name="top" value="1" checked="checked" id="input-top" />
+                                    <input type="checkbox" name="roz_status" value="1" checked="checked" id="input-top" />
                                 <?php } else { ?>
-                                    <input type="checkbox" name="top" value="1" id="input-top" />
+                                    <input type="checkbox" name="roz_status" value="1" id="input-top" />
                                 <?php } ?>
                                 &nbsp; </label>
                         </div>
