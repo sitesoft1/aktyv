@@ -423,7 +423,7 @@ class ControllerCatalogCategory extends Controller {
 		} else {
 			$data['category_description'] = array();
 		}
-
+		
 		// Categories
 		$categories = $this->model_catalog_category->getAllCategories();
 

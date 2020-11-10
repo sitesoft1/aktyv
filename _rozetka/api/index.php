@@ -1,5 +1,6 @@
 <?php
 //baza
+/*
 
 require_once __DIR__ . '/../../config.php';
 $mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
@@ -147,5 +148,7 @@ $parent_cats = array(
 );
 
 GetChildCategories($token, $cat_path, $parent_cats);//RASKOMENTIT DLA ZAPUSKA
+
+*/
 
 ?>

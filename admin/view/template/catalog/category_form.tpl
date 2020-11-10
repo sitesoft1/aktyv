@@ -40,7 +40,8 @@
               <div class="tab-content">
                 <?php foreach ($languages as $language) { ?>
                 <div class="tab-pane" id="language<?php echo $language['language_id']; ?>">
-                  <div class="form-group required">
+                  
+                    <div class="form-group required">
                     <label class="col-sm-2 control-label" for="input-name<?php echo $language['language_id']; ?>"><?php echo $entry_name; ?></label>
                     <div class="col-sm-10">
                       <input type="text" name="category_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['name'] : ''; ?>" placeholder="<?php echo $entry_name; ?>" id="input-name<?php echo $language['language_id']; ?>" class="form-control" />
@@ -49,12 +50,23 @@
                       <?php } ?>
                     </div>
                   </div>
+                  
                   <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-description<?php echo $language['language_id']; ?>"><?php echo $entry_description; ?></label>
                     <div class="col-sm-10">
                       <textarea name="category_description[<?php echo $language['language_id']; ?>][description]" placeholder="<?php echo $entry_description; ?>" id="input-description<?php echo $language['language_id']; ?>" data-lang="<?php echo $lang; ?>" class="form-control summernote"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['description'] : ''; ?></textarea>
                     </div>
                   </div>
+
+                    <!-- Настройки розетки -->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" for="input-roz_description<?php echo $language['language_id']; ?>">Общее описание категории на Розетке</label>
+                        <div class="col-sm-10">
+                            <textarea name="category_description[<?php echo $language['language_id']; ?>][roz_description]" placeholder="Общее описание категории на Розетке" id="input-roz_description<?php echo $language['language_id']; ?>" data-lang="<?php echo $lang; ?>" class="form-control summernote"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['roz_description'] : ''; ?></textarea>
+                        </div>
+                    </div>
+                    <!-- Настройки розетки КОНЕЦ -->
+                    
                   <div class="form-group">
                     <label class="col-sm-2 control-label" for="input-meta-title<?php echo $language['language_id']; ?>"><?php echo $entry_meta_title; ?></label>
                     <div class="col-sm-10">
