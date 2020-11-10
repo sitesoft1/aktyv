@@ -121,12 +121,36 @@
               <input type="hidden" name="image" value="<?php echo $image; ?>" id="input-image" />
             </div>
           </div>
+          
           <div class="form-group">
             <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
             <div class="col-sm-10">
               <input type="text" name="sort_order" value="<?php echo $sort_order; ?>" placeholder="<?php echo $entry_sort_order; ?>" id="input-sort-order" class="form-control" />
             </div>
           </div>
+          
+          <!-- Настройки выгрузки на Розетку -->
+              <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-sort-order">Выгружать ли бренд на Розетку</label>
+                  <div class="col-sm-10">
+                      <label>
+                          <?php if (!empty($roz_status)) { ?>
+                              <input type="checkbox" name="roz_status" value="1" checked="checked" id="input-top" />
+                          <?php } else { ?>
+                              <input type="checkbox" name="roz_status" value="1" id="input-top" />
+                          <?php } ?>
+                      </label>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-roz_ratio">Наценка на бренд для Розетки, будет применен если нет наценки на категорию</label>
+                  <div class="col-sm-10">
+                      <input type="text" name="roz_ratio" value="<?php echo $roz_ratio; ?>" placeholder="Наценка на бренд для Розетки напр (1.12)" id="input-roz_ratio" class="form-control" />
+                  </div>
+              </div>
+          <!-- Настройки выгрузки на Розетку КОНЕЦ -->
+          
         </form>
       </div>
     </div>

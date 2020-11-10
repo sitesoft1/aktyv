@@ -418,6 +418,28 @@ class ControllerCatalogManufacturer extends Controller {
 		} else {
 			$data['sort_order'] = '';
 		}
+		
+		//Настройки выгрузки на Розетку
+        if (isset($this->request->post['roz_status'])) {
+            $data['roz_status'] = $this->request->post['roz_status'];
+        } elseif (!empty($manufacturer_info)) {
+            $data['roz_status'] = $manufacturer_info['roz_status'];
+        } else {
+            $data['roz_status'] = '';
+        }
+        
+        if (isset($this->request->post['roz_ratio'])) {
+            $data['roz_ratio'] = $this->request->post['roz_ratio'];
+        } elseif (!empty($manufacturer_info)) {
+            if(!empty($manufacturer_info['roz_ratio'])){
+                $data['roz_ratio'] = $manufacturer_info['roz_ratio'];
+            } else {
+                $data['roz_ratio'] = '';
+            }
+        } else {
+            $data['roz_ratio'] = '';
+        }
+		//Настройки выгрузки на Розетку Конец
 
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');
