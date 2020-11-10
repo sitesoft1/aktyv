@@ -42,12 +42,23 @@
                   <?php } ?>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-description<?php echo $language['language_id']; ?>"><?php echo $entry_description; ?></label>
                 <div class="col-sm-10">
                   <textarea name="manufacturer_description[<?php echo $language['language_id']; ?>][description]" placeholder="<?php echo $entry_description; ?>" id="input-description<?php echo $language['language_id']; ?>" data-lang="<?php echo $lang; ?>" class="form-control summernote"><?php echo isset($manufacturer_description[$language['language_id']]) ? $manufacturer_description[$language['language_id']]['description'] : ''; ?></textarea>
                 </div>
               </div>
+
+              <!-- Настройки розетки -->
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-description<?php echo $language['language_id']; ?>">Общее описание бренда на Розетке</label>
+                    <div class="col-sm-10">
+                        <textarea name="manufacturer_description[<?php echo $language['language_id']; ?>][roz_description]" placeholder="Общее описание бренда на Розетке" id="input-description<?php echo $language['language_id']; ?>" data-lang="<?php echo $lang; ?>" class="form-control summernote"><?php echo isset($manufacturer_description[$language['language_id']]) ? $manufacturer_description[$language['language_id']]['roz_description'] : ''; ?></textarea>
+                    </div>
+                </div>
+              <!-- Настройки розетки Конец -->
+              
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-meta-title<?php echo $language['language_id']; ?>"><?php echo $entry_meta_title; ?></label>
                 <div class="col-sm-10">
