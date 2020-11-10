@@ -84,6 +84,7 @@
               </div>
             </div>
             <div class="tab-pane" id="tab-data">
+             
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-parent"><?php echo $entry_parent; ?></label>
                 <div class="col-sm-10">
@@ -99,6 +100,7 @@
                   </select>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="<?php echo $help_filter; ?>"><?php echo $entry_filter; ?></span></label>
                 <div class="col-sm-10">
@@ -112,6 +114,7 @@
                   </div>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_store; ?></label>
                 <div class="col-sm-10">
@@ -143,6 +146,7 @@
                   </div>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-keyword"><span data-toggle="tooltip" title="<?php echo $help_keyword; ?>"><?php echo $entry_keyword; ?></span></label>
                 <div class="col-sm-10">
@@ -152,6 +156,7 @@
                   <?php } ?>
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-sm-2 control-label"><?php echo $entry_image; ?></label>
                 <div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="<?php echo $thumb; ?>" alt="" title="" data-placeholder="<?php echo $placeholder; ?>" /></a>
@@ -189,6 +194,20 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-roz_category_id"><span data-toggle="tooltip" title="id категории на Розетке которая соответствует данной категории">id категории на Розетке</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="roz_category_id" value="<?php echo $roz_category_id; ?>" placeholder="Введите id категории на Розетке" id="input-roz_category_id" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-roz_ratio"><span data-toggle="tooltip" title="Коэфициент наценки для розетки на категорию (напр 1.12), если указано будет применятся в первую очередь">Коэфициент наценки для розетки на категорию</span></label>
+                    <div class="col-sm-10">
+                        <input type="text" name="roz_ratio" value="<?php echo $roz_ratio; ?>" placeholder="Введите коэфициент наценки для розетки на категорию (напр 1.12)" id="input-roz_ratio" class="form-control" />
+                    </div>
+                </div>
                 <!-- Настройки выгрузки на розетку КОНЕЦ -->
                 
               <div class="form-group">
@@ -197,6 +216,7 @@
                   <input type="text" name="column" value="<?php echo $column; ?>" placeholder="<?php echo $entry_column; ?>" id="input-column" class="form-control" />
                 </div>
               </div>
+              
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-sort-order"><?php echo $entry_sort_order; ?></label>
                 <div class="col-sm-10">

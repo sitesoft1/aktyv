@@ -552,6 +552,30 @@ class ControllerCatalogCategory extends Controller {
         } else {
             $data['roz_status'] = '';
         }
+        
+        if (isset($this->request->post['roz_category_id'])) {
+            $data['roz_category_id'] = trim($this->request->post['roz_category_id']);
+        } elseif (isset($this->request->get['category_id'])) {
+            if(!empty($category_info['roz_category_id'])){
+                $data['roz_category_id'] = $category_info['roz_category_id'];
+            } else {
+                $data['roz_category_id'] = '';
+            }
+        } else {
+            $data['roz_category_id'] = '';
+        }
+        
+        if (isset($this->request->post['roz_ratio'])) {
+            $data['roz_ratio'] = trim($this->request->post['roz_ratio']);
+        } elseif (isset($this->request->get['category_id'])) {
+            if(!empty($category_info['roz_ratio'])){
+                $data['roz_ratio'] = $category_info['roz_ratio'];
+            } else {
+                $data['roz_ratio'] = '';
+            }
+        } else {
+            $data['roz_ratio'] = '';
+        }
         //Настройки выгрузки на розетку КОНЕЦ
 
 		$this->load->model('design/layout');
