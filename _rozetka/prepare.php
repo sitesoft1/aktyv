@@ -45,12 +45,20 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
     //$oc_product_result = $db->query("SELECT * FROM `oc_product` WHERE `product_id` IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1') AND `status`='1' AND `quantity`>0");
     
     //$oc_product_result = $db->query("SELECT p.*, u.keyword FROM oc_product p LEFT OUTER JOIN oc_url_alias u ON u.query=CONCAT('product_id=', p.product_id) WHERE p.product_id IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1') AND p.status='1' AND p.quantity>0");
-    $oc_product_result = $db->query("SELECT p.*, u.keyword, m.name as vendor FROM oc_product p LEFT OUTER JOIN oc_url_alias u ON u.query=CONCAT('product_id=', p.product_id) LEFT OUTER JOIN oc_manufacturer_description m ON m.manufacturer_id=p.manufacturer_id WHERE p.product_id IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1') AND p.status='1' AND p.quantity>0 AND m.language_id='1'");
+    $oc_product_result = $db->query("SELECT p.*, u.keyword, m.name as vendor, m.roz_description as vendor_roz_description, pd.name as product_name, pd.description as product_description
+                                        FROM oc_product p
+                                        LEFT OUTER JOIN oc_url_alias u ON u.query=CONCAT('product_id=', p.product_id)
+                                        LEFT OUTER JOIN oc_manufacturer_description m ON m.manufacturer_id=p.manufacturer_id
+                                        LEFT OUTER JOIN oc_product_description pd ON pd.product_id=p.product_id
+                                        WHERE p.product_id IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1')
+                                        AND p.status='1'
+                                        AND p.quantity>0
+                                        AND m.language_id='1'
+                                        AND pd.language_id='1'");
     
     $cnt = 0;
     while( $oc_product_row = mysqli_fetch_assoc($oc_product_result) ){
         dump($oc_product_row);
-        
         
         //Сформируем данные для вставки в таблицу
         $product_id = $oc_product_row['product_id'];
@@ -58,10 +66,18 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
         $option_value_id = '';
         $url = HTTPS_SERVER.$oc_product_row['keyword'];
         $price = $oc_product_row['price'];
-        $name = '';
-        $pictures = '';
+        $name = $oc_product_row['product_name'];
+        $description = $oc_product_row['product_description'];
+        $pictures = '<picture>'.HTTPS_SERVER.$oc_product_row['image'].'</picture>';
+        $oc_product_image_result = $db->query("SELECT `image` FROM `oc_product_image` WHERE product_id='$product_id'");
+        if($oc_product_image_result){
+            while( $oc_product_image_row = mysqli_fetch_assoc($oc_product_image_result) ){
+                $pictures .= '<picture>'.HTTPS_SERVER.$oc_product_image_row['image'].'</picture>';
+            }
+        }
         $params = '';
         $vendor = $oc_product_row['vendor'];
+        $vendor_roz_description = $oc_product_row['vendor_roz_description'];
         $color = '';
         $size = '';
         $stock_quantity = $oc_product_row['quantity'];
