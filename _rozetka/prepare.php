@@ -133,8 +133,9 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                 
                 
                 //Здесь вставляем записи в базу
-                
-                $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
+                $check = $db->query("SELECT * FROM `oc_roz_unload_products` WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
+                if(!$check){
+                    $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
                                     `product_id`,
                                     `size_option_id`,
                                     `size_option_value_id`,
@@ -170,16 +171,35 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         '$color',
                                         '$stock_quantity',
                                         '$available')");
-                
-                
-                dump($insert_id);
+                    dump($insert_id);
+                }
+                else{
+                    $db->query_update("UPDATE `oc_roz_unload_products` SET
+                                        `url`='$url',
+                                        `price`='$price',
+                                        `category_id`='$category_id',
+                                        `roz_category_id`='$roz_category_id',
+                                        `name`='$name',
+                                        `description`='$description',
+                                        `pictures`='$pictures',
+                                        `params`='$params',
+                                        `vendor`='$vendor',
+                                        `size_name`='$size_option_name',
+                                        `size_value`='$size_option_value',
+                                        `color`='$color',
+                                        `stock_quantity`='$stock_quantity',
+                                        `available`='$available'
+                                        WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
+                    show("Товар $product_id уже существует и был обновлен");
+                }
                 //Здесь вставляем записи в базу КОНЕЦ
                 
             }
         }
         else{
-            
-            $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
+            $check = $db->query("SELECT * FROM `oc_roz_unload_products` WHERE `product_id`='$product_id'");
+            if(!$check){
+                $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
                                     `product_id`,
                                     `size_option_id`,
                                     `size_option_value_id`,
@@ -214,8 +234,25 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         '$color',
                                         '$stock_quantity',
                                         '$available')");
-    
-            dump($insert_id);
+                dump($insert_id);
+            }
+            else{
+                $db->query_update("UPDATE `oc_roz_unload_products` SET
+                                        `url`='$url',
+                                        `price`='$price',
+                                        `category_id`='$category_id',
+                                        `roz_category_id`='$roz_category_id',
+                                        `name`='$name',
+                                        `description`='$description',
+                                        `pictures`='$pictures',
+                                        `params`='$params',
+                                        `vendor`='$vendor',
+                                        `color`='$color',
+                                        `stock_quantity`='$stock_quantity',
+                                        `available`='$available'
+                                        WHERE `product_id`='$product_id'");
+                show("Товар $product_id уже существует и был обновлен");
+            }
             
         }
         //Получим опции фильтра КОНЕЦ

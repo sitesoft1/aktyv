@@ -195,3 +195,39 @@ function sig_handler($signo)
     file_put_contents(LOG_DIR . '/sig_handler_log.txt', $err, FILE_APPEND);
     exit;
 }
+
+function write($xml, $filename, $file_append=1)
+{
+    if($file_append > 0){
+        file_put_contents($filename, $xml, FILE_APPEND);
+    }else{
+        file_put_contents($filename, $xml);
+    }
+}
+
+function whatFileTo($filename, $directory= __DIR__ . '/../xml/' )
+{
+    $path = $directory . $filename;
+    return $path;
+}
+
+
+function writeFinalFile($final_file, $temp_file, $xml_id)
+{
+    //esli fail est to rename
+    if( file_exists( whatFileTo($final_file.$xml_id.'.xml') ) ){
+        $date = date('Y-m-d-H-i-s');
+        rename( whatFileTo($final_file.$xml_id.'.xml'), whatFileTo($final_file.$xml_id. '-' .$date .'.old'));
+    }
+    
+    if( !copy( whatFileTo($temp_file.$xml_id.'.xml'), whatFileTo($final_file.$xml_id.'.xml') ) ) {
+        echo 'Ошибка! Не удалось скопировать '. whatFileTo($temp_file.$xml_id.'.xml') .' в ' . whatFileTo($final_file.$xml_id.'.xml');
+    }else{
+        echo 'Файл '. whatFileTo($final_file.$xml_id.'.xml') .' удачно переписан!';
+        //zapishem spisok failov
+        write('https://aktyv.com.ua/xml/'.$final_file.$xml_id.'.xml'.PHP_EOL, whatFileTo('list.txt'));
+        //delete temp file
+        unlink( whatFileTo($temp_file.$xml_id.'.xml') );
+    }
+    
+}
