@@ -97,10 +97,12 @@ class Db
             $err = "Не удалось выполнить запрос: (" . $this->db->errno . ") " . $this->db->error;
             $err .= "Номер ошибки: " . $this->db->errno . "\n";
             $err .= "Ошибка: " . $this->db->error . "\n";
+            echo $err;
             //$this->log('query_insert_log', $err, true);
             
             return false;
-        }else{
+        }
+        else{
             $err = "Запрос <br> $sql <br> - выполнен удачно! <br><hr>";
             //$this->log('query_insert_log', $err, true);
             
@@ -115,10 +117,12 @@ class Db
             $err = "Не удалось выполнить запрос: (" . $this->db->errno . ") " . $this->db->error;
             $err .= "Номер ошибки: " . $this->db->errno . "\n";
             $err .= "Ошибка: " . $this->db->error . "\n";
+            echo $err;
             //$this->log('query_insert_id_log', $err, true);
             
             return false;
-        }else{
+        }
+        else{
             $err = "Запрос <br> $sql <br> - выполнен удачно! <br><hr>";
             //$this->log('query_insert_id_log', $err, true);
             

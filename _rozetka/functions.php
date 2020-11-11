@@ -33,6 +33,7 @@ function show_strong($data)
 }
 
 function my_mb_ucfirst($str) {
+    $str = mb_strtolower($str);
     $fc = mb_strtoupper(mb_substr($str, 0, 1));
     return $fc.mb_substr($str, 1);
 }
