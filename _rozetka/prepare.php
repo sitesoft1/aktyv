@@ -26,6 +26,8 @@ $sizes_log = __DIR__ . '/var/check_sizes.txt';
 
 $off = __DIR__ . '/var/prepare_off.txt'; @unlink($off);
 $on = __DIR__ . '/var/prepare_on.txt'; file_put_contents($on, 'ON!!!');
+
+$language_id = 1;//Язык 1- ру, 3 - уа.
 //files END
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -53,12 +55,12 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         WHERE p.product_id IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1')
                                         AND p.status='1'
                                         AND p.quantity>0
-                                        AND m.language_id='1'
-                                        AND pd.language_id='1'");
+                                        AND m.language_id='$language_id'
+                                        AND pd.language_id='$language_id'");
     
     $cnt = 0;
     while( $oc_product_row = mysqli_fetch_assoc($oc_product_result) ){
-        dump($oc_product_row);
+        //dump($oc_product_row);
         
         //Сформируем данные для вставки в таблицу
         $product_id = $oc_product_row['product_id'];
@@ -82,6 +84,28 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
         $size = '';
         $stock_quantity = $oc_product_row['quantity'];
         $available = 'true';
+    
+        //Получим опции фильтра
+        //Размер
+        $sizes_options_result = $db->query("SELECT ovd.value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
+                                            FROM oc_ocfilter_option_value_description ovd
+                                            LEFT OUTER JOIN oc_ocfilter_option_description ood ON ood.option_id=ovd.option_id
+                                            WHERE ovd.option_id IN(SELECT option_id FROM `oc_ocfilter_option_value_to_product` WHERE product_id='$product_id')
+                                            AND ovd.value_id IN(SELECT value_id FROM `oc_ocfilter_option_value_to_product` WHERE product_id='$product_id')
+                                            AND ovd.language_id='$language_id'
+                                            AND ood.language_id='$language_id'
+                                            AND ood.name LIKE '%размер%'");
+        
+        if($sizes_options_result){
+            while( $sizes_options_row = mysqli_fetch_assoc($sizes_options_result) ){
+                show_strong("У товара $product_id размеры есть!");
+                dump($sizes_options_row);
+            }
+        }
+        else{
+            show("У товара $product_id размеров нету!");
+        }
+        //Получим опции фильтра КОНЕЦ
         //Сформируем данные для вставки в таблицу КОНЕЦ
         
         
