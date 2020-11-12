@@ -231,3 +231,39 @@ function writeFinalFile($final_file, $temp_file, $xml_id)
     }
     
 }
+
+/*
+function stripAttributes($s, $allowedattr = array()) {
+    if (preg_match_all("/<[^>]*\\s([^>]*)\\/*>/msiU", $s, $res, PREG_SET_ORDER)) { foreach ($res as $r) { $tag = $r[0]; $attrs = array(); preg_match_all("/\\s.*=(['\"]).*\\1/msiU", " " . $r[1], $split, PREG_SET_ORDER); foreach ($split as $spl) { $attrs[] = $spl[0]; } $newattrs = array(); foreach ($attrs as $a) { $tmp = explode("=", $a); if (trim($a) != "" && (!isset($tmp[1]) || (trim($tmp[0]) != "" && !in_array(strtolower(trim($tmp[0])), $allowedattr)))) { } else { $newattrs[] = $a; } } $attrs = implode(" ", $newattrs); $rpl = str_replace($r[1], $attrs, $tag); $s = str_replace($tag, $rpl, $s); } }
+return $s;
+}
+*/
+
+function stripAttributes($text){
+    
+    $text = preg_replace('/\s?class=["][^"]*"\s?/i', ' ', $text);
+    $text = preg_replace('/\s?style=["][^"]*"\s?/i', ' ', $text);
+    $text = preg_replace('/\s?align=["][^"]*"\s?/i', ' ', $text);
+    $text = preg_replace('/\s?lang=["][^"]*"\s?/i', ' ', $text);
+    $text = preg_replace('/\s?<style[^>]*?>.*?<\/style>\s?/si', ' ', $text);
+    $text = preg_replace('/\s?<script[^>]*?>.*?<\/script>\s?/si', ' ', $text);
+    
+    return $text;
+}
+
+function strip_tag_css($text){
+    
+    
+    $text = strip_tags($text,"<style>");
+    
+    $substring = substr($text,strpos($text,"<style"),strpos($text,"</style>")+2);
+    
+    $text = str_replace($substring,"",$text);
+    $text = str_replace(array("\t","\r","\n"),"",$text);
+    $text = trim($text);
+    
+    return $text;
+}
+
+
+
