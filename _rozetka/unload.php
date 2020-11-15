@@ -80,7 +80,9 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     
     $offer_id = $unload_products_row['id'];
     $product_id = $unload_products_row['product_id'];
+    $manufacturer_id = $unload_products_row['manufacturer_id'];
     $available = $unload_products_row['available'];
+    $category_id = $unload_products_row['category_id'];
     $roz_category_id = $unload_products_row['roz_category_id'];
     $url = $unload_products_row['url'];
     $price = $unload_products_row['price'];
@@ -151,12 +153,52 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     }
     
     $description = str_ireplace('&nbsp;', ' ', $description);
+    $description = str_ireplace(PHP_EOL, ' ', $description);
+    
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = str_ireplace('  ', ' ', $description);
+    $description = trim($description);
+    
+    dump(mb_strlen($description));
+   
+    if(mb_strlen($description)<50){
+        $description = $db->query_assoc("SELECT roz_description FROM `oc_category_description` WHERE category_id='$category_id' AND language_id='1'", "roz_description");
+        if(!$description or (mb_strlen($description)<50)){
+            $description = $db->query_assoc("SELECT roz_description FROM `oc_manufacturer_description` WHERE manufacturer_id='$manufacturer_id' AND language_id='1'", "roz_description");
+        }
+    }
     
     $pictures = $unload_products_row['pictures'];
     $params = $unload_products_row['params'];
     $vendor = $unload_products_row['vendor'];
+    
     $size_name = $unload_products_row['size_name'];
     $size_value = $unload_products_row['size_value'];
+    if(isset($unload_products_row['footwear']) and !empty($unload_products_row['footwear'])){
+        $size_value = (integer) $size_value;
+        $insole_length = $db->query_assoc("SELECT DISTINCT insole_length FROM oc_roz_sizes WHERE `size`='$size_value'", "insole_length");
+        $insole_length = trim($insole_length);
+        $insole_length = "$insole_length см";
+    }
+    
+    
     $color = $unload_products_row['color'];
     $stock_quantity = $unload_products_row['stock_quantity'];
     $available = $unload_products_row['available'];
@@ -167,6 +209,10 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
         $name .=  " $size_value";
     }
     
+    if(isset($insole_length) and !empty($insole_length)){
+        $name .=  " $insole_length";
+    }
+    
     if(!empty($color)){
         $name .=  " $color";
     }
@@ -174,6 +220,8 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     if(!empty($vendor_code)){
         $name .=  " ($vendor_code)";
     }
+    
+  
     
     $xml .= '<offer id="'. $offer_id .'" available="' . $available . '">' . PHP_EOL;
     $xml .= '<url><![CDATA['. $url .']]></url>' . PHP_EOL;
@@ -187,12 +235,17 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     $xml .= '<vendorCode>' . $vendor_code . '</vendorCode>' . PHP_EOL;
     $xml .= '<description><![CDATA[' . $description . ']]></description>' . PHP_EOL;
     if(!empty($size_name) and !empty($size_value)){
-        $xml .= '<param name="'.$size_name.'">' . $size_value . '</param>' . PHP_EOL;
+        $xml .= '<param name="Размер">' . $size_value . '</param>' . PHP_EOL;
+        if(isset($insole_length) and !empty($insole_length)){
+            $xml .= '<param name="Длина стельки">' . $insole_length . '</param>' . PHP_EOL;
+        }
     }
     if($color){
         $xml .= '<param name="Цвет"><![CDATA[' . $color . ']]></param>' . PHP_EOL;
     }
-    $xml .= $params . PHP_EOL;
+    if(!empty($params)){
+        $xml .= $params . PHP_EOL;
+    }
     if($available == 'true'){
         $xml .= '<stock_quantity>' . $stock_quantity . '</stock_quantity>' . PHP_EOL;
     }else{

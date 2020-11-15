@@ -42,6 +42,7 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
     $category_id = $oc_category_row['category_id'];
     $roz_category_id = $oc_category_row['roz_category_id'];
     $category_roz_ratio = $oc_category_row['roz_ratio'];
+    $roz_footwear = $oc_category_row['roz_footwear'];
     
     //dump($oc_product_to_category_result);
     //$oc_product_result = $db->query("SELECT * FROM `oc_product` WHERE `product_id` IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1') AND `status`='1' AND `quantity`>0");
@@ -64,6 +65,7 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
         
         //Сформируем данные для вставки в таблицу
         $product_id = $oc_product_row['product_id'];
+        $manufacturer_id = $oc_product_row['manufacturer_id'];
         $url = HTTPS_SERVER.$oc_product_row['keyword'];
         $price = $oc_product_row['price'];
         $name = $oc_product_row['product_name'];
@@ -148,8 +150,10 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                     `pictures`,
                                     `params`,
                                     `vendor`,
+                                    `manufacturer_id`,
                                     `size_name`,
                                     `size_value`,
+                                    `footwear`,
                                     `color`,
                                     `stock_quantity`,
                                     `available`)
@@ -166,8 +170,10 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         '$pictures',
                                         '$params',
                                         '$vendor',
+                                        '$manufacturer_id',
                                         '$size_option_name',
                                         '$size_option_value',
+                                        '$roz_footwear',
                                         '$color',
                                         '$stock_quantity',
                                         '$available')");
@@ -184,8 +190,10 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         `pictures`='$pictures',
                                         `params`='$params',
                                         `vendor`='$vendor',
+                                        `manufacturer_id`='$manufacturer_id',
                                         `size_name`='$size_option_name',
                                         `size_value`='$size_option_value',
+                                        `footwear`='$roz_footwear',
                                         `color`='$color',
                                         `stock_quantity`='$stock_quantity',
                                         `available`='$available'
@@ -212,6 +220,7 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                     `pictures`,
                                     `params`,
                                     `vendor`,
+                                    `manufacturer_id`,
                                     `size_name`,
                                     `size_value`,
                                     `color`,
@@ -229,6 +238,7 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         '$pictures',
                                         '$params',
                                         '$vendor',
+                                        '$manufacturer_id',
                                         '',
                                         '',
                                         '$color',
@@ -247,6 +257,7 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         `pictures`='$pictures',
                                         `params`='$params',
                                         `vendor`='$vendor',
+                                        `manufacturer_id`='$manufacturer_id',
                                         `color`='$color',
                                         `stock_quantity`='$stock_quantity',
                                         `available`='$available'

@@ -553,6 +553,14 @@ class ControllerCatalogCategory extends Controller {
             $data['roz_status'] = '';
         }
         
+        if (isset($this->request->post['roz_footwear'])) {
+            $data['roz_footwear'] = $this->request->post['roz_footwear'];
+        } elseif (isset($this->request->get['category_id'])) {
+            $data['roz_footwear'] = $category_info['roz_footwear'];
+        } else {
+            $data['roz_footwear'] = '';
+        }
+        
         if (isset($this->request->post['roz_category_id'])) {
             $data['roz_category_id'] = trim($this->request->post['roz_category_id']);
         } elseif (isset($this->request->get['category_id'])) {

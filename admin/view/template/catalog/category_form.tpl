@@ -202,7 +202,24 @@
                                 <?php } else { ?>
                                     <input type="checkbox" name="roz_status" value="1" id="input-top" />
                                 <?php } ?>
-                                &nbsp; </label>
+                                &nbsp;
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="input-top"><span data-toggle="tooltip" title="Это обувь (проставлять длину стельки)">Это обувь (проставлять длину стельки)</span></label>
+                    <div class="col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                <?php if (!empty($roz_footwear)) { ?>
+                                    <input type="checkbox" name="roz_footwear" value="1" checked="checked" id="input-top" />
+                                <?php } else { ?>
+                                    <input type="checkbox" name="roz_footwear" value="1" id="input-top" />
+                                <?php } ?>
+                                &nbsp;
+                            </label>
                         </div>
                     </div>
                 </div>
