@@ -85,7 +85,21 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     $category_id = $unload_products_row['category_id'];
     $roz_category_id = $unload_products_row['roz_category_id'];
     $url = $unload_products_row['url'];
-    $price = $unload_products_row['price'];
+    
+    $roz_ratio = $db->query_assoc("SELECT roz_ratio FROM `oc_category` WHERE category_id='$category_id'", "roz_ratio");
+    if(empty($roz_ratio)){
+        $roz_ratio = $db->query_assoc("SELECT roz_ratio FROM `oc_manufacturer` WHERE manufacturer_id='$manufacturer_id'", "roz_ratio");
+    }
+    if(empty($roz_ratio)){
+        $roz_ratio = $db->query_assoc("SELECT DISTINCT `ratio` FROM `oc_roz_ratio`", "ratio");
+    }
+    
+    if($roz_ratio > 0){
+        $price = (int) $unload_products_row['price'] * $roz_ratio;
+    }else{
+        $price = (int) $unload_products_row['price'];
+    }
+    
     
     $name = $unload_products_row['name'];
     
@@ -176,7 +190,7 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     $description = str_ireplace('  ', ' ', $description);
     $description = trim($description);
     
-    dump(mb_strlen($description));
+    //dump(mb_strlen($description));
    
     if(mb_strlen($description)<50){
         $description = $db->query_assoc("SELECT roz_description FROM `oc_category_description` WHERE category_id='$category_id' AND language_id='1'", "roz_description");
