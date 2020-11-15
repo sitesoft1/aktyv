@@ -70,11 +70,11 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
         $price = $oc_product_row['price'];
         $name = $oc_product_row['product_name'];
         $description = $oc_product_row['product_description'];
-        $pictures = '<picture>'.HTTPS_SERVER.$oc_product_row['image'].'</picture>';
+        $pictures = '<picture>'.HTTPS_SERVER.'image/'.$oc_product_row['image'].'</picture>';
         $oc_product_image_result = $db->query("SELECT `image` FROM `oc_product_image` WHERE product_id='$product_id'");
         if($oc_product_image_result){
             while( $oc_product_image_row = mysqli_fetch_assoc($oc_product_image_result) ){
-                $pictures .= '<picture>'.HTTPS_SERVER.$oc_product_image_row['image'].'</picture>';
+                $pictures .= '<picture>'.HTTPS_SERVER.'image/'.$oc_product_image_row['image'].'</picture>';
             }
         }
         $vendor = $oc_product_row['vendor'];

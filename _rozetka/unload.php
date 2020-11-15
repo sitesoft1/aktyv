@@ -209,7 +209,9 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
         $size_value = (integer) $size_value;
         $insole_length = $db->query_assoc("SELECT DISTINCT insole_length FROM oc_roz_sizes WHERE `size`='$size_value'", "insole_length");
         $insole_length = trim($insole_length);
-        $insole_length = "$insole_length см";
+        if(!empty($insole_length)){
+            $insole_length = "$insole_length см";
+        }
     }
     
     
