@@ -63,7 +63,7 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
     while( $oc_product_row = mysqli_fetch_assoc($oc_product_result) ){
         //dump($oc_product_row);
         
-        //Сформируем данные для вставки в таблицу
+        //Сформируем данные для вставки в таб
         $product_id = $oc_product_row['product_id'];
         $manufacturer_id = $oc_product_row['manufacturer_id'];
         $url = HTTPS_SERVER.$oc_product_row['keyword'];
