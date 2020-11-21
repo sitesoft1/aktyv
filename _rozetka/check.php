@@ -35,7 +35,6 @@ $language_id = 1;//Язык 1- ру, 3 - уа.
 $db = new Db;
 
 $oc_roz_unload_products_result = $db->query("SELECT * FROM `oc_roz_unload_products`");
-//dump($oc_category_result);
 
 while( $oc_roz_unload_products_row = mysqli_fetch_assoc($oc_roz_unload_products_result) ){
     $product_id = $oc_roz_unload_products_row['product_id'];
@@ -43,9 +42,15 @@ while( $oc_roz_unload_products_row = mysqli_fetch_assoc($oc_roz_unload_products_
     $size_option_value_id = $oc_roz_unload_products_row['size_option_value_id'];
     
     if( empty($size_option_id) and empty($size_option_value_id) ){
-        $oc_product_result = $db->query("SELECT * FROM `oc_product` WHERE `product_id`='$product_id'");
+        $oc_product_result = $db->query("SELECT * FROM `oc_product` WHERE `product_id`='$product_id' AND `status`='1' AND `quantity`>0");
         if(!$oc_product_result){
             $db->query_update("UPDATE `oc_roz_unload_products` SET available='false', `stock_quantity`='0' WHERE `product_id`='$product_id'");
+        }
+    }
+    else{
+        $oc_ocfilter_option_value_to_product_result = $db->query("SELECT * FROM `oc_ocfilter_option_value_to_product` WHERE `product_id`='$product_id' AND `option_id`='$size_option_id' AND `value_id`='$size_option_value_id'");
+        if(!$oc_ocfilter_option_value_to_product_result){
+            $db->query_update("UPDATE `oc_roz_unload_products` SET available='false', `stock_quantity`='0' WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
         }
     }
 }
