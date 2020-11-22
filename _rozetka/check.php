@@ -1,13 +1,4 @@
 <?php
-/*
-nohup php -q prepare.php 2>&1 &
-ili:
-screen
-php prepare.php
-
-Ochistka pamyati
-https://www.php.net/manual/ru/mysqli-result.free.php
-*/
 set_time_limit(0);
 //vkluchaem vivod osibok php
 ini_set('error_reporting', E_ALL);
@@ -48,7 +39,9 @@ while( $oc_roz_unload_products_row = mysqli_fetch_assoc($oc_roz_unload_products_
         }
     }
     else{
-        $oc_ocfilter_option_value_to_product_result = $db->query("SELECT * FROM `oc_ocfilter_option_value_to_product` WHERE `product_id`='$product_id' AND `option_id`='$size_option_id' AND `value_id`='$size_option_value_id'");
+        
+        $oc_ocfilter_option_value_to_product_result = $db->query("SELECT * FROM `oc_product_option_value` WHERE `product_id`='$product_id' AND `option_id`='$size_option_id' AND `option_value_id`='$size_option_value_id'");
+       
         if(!$oc_ocfilter_option_value_to_product_result){
             $db->query_update("UPDATE `oc_roz_unload_products` SET available='false', `stock_quantity`='0' WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
         }

@@ -1,13 +1,4 @@
 <?php
-/*
-nohup php -q prepare.php 2>&1 &
-ili:
-screen
-php unload.php
-
-Ochistka pamyati
-https://www.php.net/manual/ru/mysqli-result.free.php
-*/
 set_time_limit(0);
 //vkluchaem vivod osibok php
 ini_set('error_reporting', E_ALL);

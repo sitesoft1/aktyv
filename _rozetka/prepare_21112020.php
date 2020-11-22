@@ -1,4 +1,13 @@
 <?php
+/*
+nohup php -q prepare.php 2>&1 &
+ili:
+screen
+php prepare.php
+
+Ochistka pamyati
+https://www.php.net/manual/ru/mysqli-result.free.php
+*/
 set_time_limit(0);
 //vkluchaem vivod osibok php
 ini_set('error_reporting', E_ALL);
@@ -13,7 +22,7 @@ require_once __DIR__ . '/classes/db.php';
 
 //files
 $error_log = __DIR__ . '/var/error_log.txt';
-$sizes_log = __DIR__ . '/var/prepare_sizes.txt';
+$sizes_log = __DIR__ . '/var/check_sizes.txt';
 
 $off = __DIR__ . '/var/prepare_off.txt'; @unlink($off);
 $on = __DIR__ . '/var/prepare_on.txt'; file_put_contents($on, 'ON!!!');
@@ -102,16 +111,8 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
         }
         //Параметры КОНЕЦ
         
-        $sizes_options_result = $db->query("SELECT ovd.option_value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
-                                            FROM oc_option_value_description ovd
-                                            LEFT OUTER JOIN oc_option_description ood ON ood.option_id=ovd.option_id
-                                            WHERE ovd.option_id IN(SELECT option_id FROM oc_product_option_value WHERE product_id='$product_id')
-                                            AND ovd.option_value_id IN(SELECT option_value_id FROM oc_product_option_value WHERE product_id='$product_id')
-                                            AND ovd.language_id='$language_id' AND ood.language_id='$language_id' AND ood.name LIKE '%размер%'");
-        
-        dump($sizes_options_result);
-        
-       /*
+    
+        //Получим опции фильтра
         //Размер
         $sizes_options_result = $db->query("SELECT ovd.value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
                                             FROM oc_ocfilter_option_value_description ovd
@@ -121,12 +122,11 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                             AND ovd.language_id='$language_id'
                                             AND ood.language_id='$language_id'
                                             AND ood.name LIKE '%размер%'");
-       */
         
         if($sizes_options_result){
             while( $sizes_options_row = mysqli_fetch_assoc($sizes_options_result) ){
-                show_strong("У товара $product_id размеры есть!");
-                dump($sizes_options_row);
+                //show_strong("У товара $product_id размеры есть!");
+                //dump($sizes_options_row);
     
                 $size_option_value = $sizes_options_row['option_value'];
                 $size_option_name = my_mb_ucfirst($sizes_options_row['option_name']);
