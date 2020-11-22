@@ -19,7 +19,7 @@ $off = __DIR__ . '/var/check_off.txt'; @unlink($off);
 $on = __DIR__ . '/var/check_on.txt'; file_put_contents($on, 'ON!!!');
 
 $language_id = 1;//Язык 1- ру, 3 - уа.
-//files END
+//files END..
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <?php
