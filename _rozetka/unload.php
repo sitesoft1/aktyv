@@ -196,14 +196,25 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     
     $size_name = $unload_products_row['size_name'];
     $size_value = $unload_products_row['size_value'];
+    
+    /*
     if(isset($unload_products_row['footwear']) and !empty($unload_products_row['footwear'])){
         $size_value = trim($size_value);
-        $insole_length = $db->query_assoc("SELECT DISTINCT insole_length FROM oc_roz_sizes WHERE `size`='" . $size_value . "'", "insole_length");
+        
+        if(stristr($size_value, '-')){
+            $size_value_arr = explode('-', $size_value);
+            $size_value2 = $size_value_arr[0];
+            $insole_length = $db->query_assoc("SELECT DISTINCT insole_length FROM oc_roz_sizes WHERE `size`='" . $size_value2 . "'", "insole_length");
+        }else{
+            $insole_length = $db->query_assoc("SELECT DISTINCT insole_length FROM oc_roz_sizes WHERE `size`='" . $size_value . "'", "insole_length");
+        }
+        
         $insole_length = trim($insole_length);
         if(!empty($insole_length)){
             $insole_length = "$insole_length см";
         }
     }
+    */
     
     
     $color = $unload_products_row['color'];
@@ -227,6 +238,7 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     if(!empty($vendor_code)){
         $name .=  " ($vendor_code)";
     }
+    $name = trim($name);
     
   
     
