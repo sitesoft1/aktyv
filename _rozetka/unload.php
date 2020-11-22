@@ -197,8 +197,8 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     $size_name = $unload_products_row['size_name'];
     $size_value = $unload_products_row['size_value'];
     if(isset($unload_products_row['footwear']) and !empty($unload_products_row['footwear'])){
-        $size_value = (integer) $size_value;
-        $insole_length = $db->query_assoc("SELECT DISTINCT insole_length FROM oc_roz_sizes WHERE `size`='$size_value'", "insole_length");
+        $size_value = trim($size_value);
+        $insole_length = $db->query_assoc("SELECT DISTINCT insole_length FROM oc_roz_sizes WHERE `size`='" . $size_value . "'", "insole_length");
         $insole_length = trim($insole_length);
         if(!empty($insole_length)){
             $insole_length = "$insole_length см";
@@ -217,7 +217,7 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     }
     
     if(isset($insole_length) and !empty($insole_length)){
-        $name .=  " $insole_length";
+        $name .=  " ($insole_length)";
     }
     
     if(!empty($color)){
@@ -261,6 +261,8 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     $xml .= '</offer>' . PHP_EOL;
     
     write($xml, whatFileTo($temp_file.$xml_id.'.xml'), 1);
+    
+    unset($offer_id,$product_id,$manufacturer_id,$available,$category_id,$roz_category_id,$url,$roz_ratio,$price,$name,$description,$description__arr,$pictures,$params,$vendor,$size_name,$size_value,$insole_length,$color,$stock_quantity,$available,$vendor_code,$name);
 }
 
 $xml = '';

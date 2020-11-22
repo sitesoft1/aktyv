@@ -30,15 +30,23 @@ $oc_category_result = $db->query("SELECT * FROM ".DB_PREFIX."category WHERE `roz
 
 while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
     //dump($oc_category_row);
+    $category_id = '';
     $category_id = $oc_category_row['category_id'];
+    
+    $roz_category_id = '';
     $roz_category_id = $oc_category_row['roz_category_id'];
+    
+    $category_roz_ratio = '';
     $category_roz_ratio = $oc_category_row['roz_ratio'];
+    
+    $roz_footwear = '';
     $roz_footwear = $oc_category_row['roz_footwear'];
     
     //dump($oc_product_to_category_result);
     //$oc_product_result = $db->query("SELECT * FROM `oc_product` WHERE `product_id` IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1') AND `status`='1' AND `quantity`>0");
     
     //$oc_product_result = $db->query("SELECT p.*, u.keyword FROM oc_product p LEFT OUTER JOIN oc_url_alias u ON u.query=CONCAT('product_id=', p.product_id) WHERE p.product_id IN(SELECT `product_id` FROM `oc_product_to_category` WHERE `category_id`='$category_id' AND `main_category`='1') AND p.status='1' AND p.quantity>0");
+    $oc_product_result = false;
     $oc_product_result = $db->query("SELECT p.*, u.keyword, m.name as vendor, m.roz_description as vendor_roz_description, pd.name as product_name, pd.description as product_description
                                         FROM oc_product p
                                         LEFT OUTER JOIN oc_url_alias u ON u.query=CONCAT('product_id=', p.product_id)
@@ -51,35 +59,37 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         AND pd.language_id='$language_id'");
     
     $cnt = 0;
-    while( $oc_product_row = mysqli_fetch_assoc($oc_product_result) ){
-        //dump($oc_product_row);
-        
-        //Сформируем данные для вставки в таб
-        $product_id = $oc_product_row['product_id'];
-        $manufacturer_id = $oc_product_row['manufacturer_id'];
-        $url = HTTPS_SERVER.$oc_product_row['keyword'];
-        $price = $oc_product_row['price'];
-        $name = $oc_product_row['product_name'];
-        $description = $oc_product_row['product_description'];
-        $pictures = '<picture>'.HTTPS_SERVER.'image/'.$oc_product_row['image'].'</picture>';
-        $oc_product_image_result = $db->query("SELECT `image` FROM `oc_product_image` WHERE product_id='$product_id'");
-        if($oc_product_image_result){
-            while( $oc_product_image_row = mysqli_fetch_assoc($oc_product_image_result) ){
-                $pictures .= '<picture>'.HTTPS_SERVER.'image/'.$oc_product_image_row['image'].'</picture>';
-            }
-        }
-        $vendor = $oc_product_row['vendor'];
-        $vendor_roz_description = $oc_product_row['vendor_roz_description'];
-        $stock_quantity = $oc_product_row['quantity'];
-        $available = 'true';
+    if($oc_product_result){
+        while( $oc_product_row = mysqli_fetch_assoc($oc_product_result) ){
     
-        //Цвет
-        $color = $db->query_assoc("SELECT `name` FROM `oc_option_value_description` WHERE option_id='14' AND language_id='1' AND option_value_id IN(SELECT option_value_id FROM `oc_product_option_value` WHERE product_id='$product_id' AND option_id='14') LIMIT 1","name");
-        $color = my_mb_ucfirst($color);
-        //Цвет КОНЕЦ
+            unset($product_id, $manufacturer_id, $url, $price, $name, $description, $pictures, $oc_product_image_result, $vendor, $vendor_roz_description, $stock_quantity, $available, $color, $params_options_result, $params, $sizes_options_result, $size_option_value, $size_option_name, $size_option_id, $size_option_value_id, $check, $insert_id);
         
-        //Параметры
-        $params_options_result = $db->query("SELECT ovd.value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
+            //Сформируем данные для вставки в таб
+            $product_id = $oc_product_row['product_id'];
+            $manufacturer_id = $oc_product_row['manufacturer_id'];
+            $url = HTTPS_SERVER.$oc_product_row['keyword'];
+            $price = $oc_product_row['price'];
+            $name = $oc_product_row['product_name'];
+            $description = $oc_product_row['product_description'];
+            $pictures = '<picture>'.HTTPS_SERVER.'image/'.$oc_product_row['image'].'</picture>';
+            $oc_product_image_result = $db->query("SELECT `image` FROM `oc_product_image` WHERE product_id='$product_id'");
+            if($oc_product_image_result){
+                while( $oc_product_image_row = mysqli_fetch_assoc($oc_product_image_result) ){
+                    $pictures .= '<picture>'.HTTPS_SERVER.'image/'.$oc_product_image_row['image'].'</picture>';
+                }
+            }
+            $vendor = $oc_product_row['vendor'];
+            $vendor_roz_description = $oc_product_row['vendor_roz_description'];
+            $stock_quantity = $oc_product_row['quantity'];
+            $available = 'true';
+        
+            //Цвет
+            $color = $db->query_assoc("SELECT `name` FROM `oc_option_value_description` WHERE option_id='14' AND language_id='1' AND option_value_id IN(SELECT option_value_id FROM `oc_product_option_value` WHERE product_id='$product_id' AND option_id='14') LIMIT 1","name");
+            $color = my_mb_ucfirst($color);
+            //Цвет КОНЕЦ
+        
+            //Параметры
+            $params_options_result = $db->query("SELECT ovd.value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
                                             FROM oc_ocfilter_option_value_description ovd
                                             LEFT OUTER JOIN oc_ocfilter_option_description ood ON ood.option_id=ovd.option_id
                                             WHERE ovd.option_id IN(SELECT option_id FROM `oc_ocfilter_option_value_to_product` WHERE product_id='$product_id')
@@ -87,57 +97,59 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                             AND ovd.language_id='$language_id'
                                             AND ood.language_id='$language_id'
                                             AND ood.name NOT LIKE '%размер%'");
-    
-        $params = '';
-        if($params_options_result){
-            while( $params_options_row = mysqli_fetch_assoc($params_options_result) ){
-                //show_strong("У товара $product_id параметры есть!");
-                //dump($params_options_row);
-    
-                $params .= '<param name="'.$params_options_row['option_name'].'">'.$params_options_row['option_value'].'</param>';
-            }
-        }
-        else{
-            //show("У товара $product_id параметров нету!");
-        }
-        //Параметры КОНЕЦ
         
-        $sizes_options_result = $db->query("SELECT ovd.option_value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
+            $params = '';
+            if($params_options_result){
+                while( $params_options_row = mysqli_fetch_assoc($params_options_result) ){
+                    //show_strong("У товара $product_id параметры есть!");
+                    //dump($params_options_row);
+                
+                    $params .= '<param name="'.$params_options_row['option_name'].'">'.$params_options_row['option_value'].'</param>';
+                }
+            }
+            else{
+                //show("У товара $product_id параметров нету!");
+            }
+            //Параметры КОНЕЦ
+        
+            $sizes_options_result = $db->query("SELECT ovd.option_value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
                                             FROM oc_option_value_description ovd
                                             LEFT OUTER JOIN oc_option_description ood ON ood.option_id=ovd.option_id
                                             WHERE ovd.option_id IN(SELECT option_id FROM oc_product_option_value WHERE product_id='$product_id')
                                             AND ovd.option_value_id IN(SELECT option_value_id FROM oc_product_option_value WHERE product_id='$product_id')
                                             AND ovd.language_id='$language_id' AND ood.language_id='$language_id' AND ood.name LIKE '%размер%'");
         
-        dump($sizes_options_result);
+            dump($sizes_options_result);
         
-       /*
-        //Размер
-        $sizes_options_result = $db->query("SELECT ovd.value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
-                                            FROM oc_ocfilter_option_value_description ovd
-                                            LEFT OUTER JOIN oc_ocfilter_option_description ood ON ood.option_id=ovd.option_id
-                                            WHERE ovd.option_id IN(SELECT option_id FROM `oc_ocfilter_option_value_to_product` WHERE product_id='$product_id')
-                                            AND ovd.value_id IN(SELECT value_id FROM `oc_ocfilter_option_value_to_product` WHERE product_id='$product_id')
-                                            AND ovd.language_id='$language_id'
-                                            AND ood.language_id='$language_id'
-                                            AND ood.name LIKE '%размер%'");
-       */
+            /*
+             //Размер
+             $sizes_options_result = $db->query("SELECT ovd.value_id AS option_value_id, ovd.option_id AS option_id, ovd.name AS option_value, ood.name AS option_name
+                                                 FROM oc_ocfilter_option_value_description ovd
+                                                 LEFT OUTER JOIN oc_ocfilter_option_description ood ON ood.option_id=ovd.option_id
+                                                 WHERE ovd.option_id IN(SELECT option_id FROM `oc_ocfilter_option_value_to_product` WHERE product_id='$product_id')
+                                                 AND ovd.value_id IN(SELECT value_id FROM `oc_ocfilter_option_value_to_product` WHERE product_id='$product_id')
+                                                 AND ovd.language_id='$language_id'
+                                                 AND ood.language_id='$language_id'
+                                                 AND ood.name LIKE '%размер%'");
+            */
         
-        if($sizes_options_result){
-            while( $sizes_options_row = mysqli_fetch_assoc($sizes_options_result) ){
-                show_strong("У товара $product_id размеры есть!");
-                dump($sizes_options_row);
+            if($sizes_options_result){
+                while( $sizes_options_row = mysqli_fetch_assoc($sizes_options_result) ){
+                    show_strong("У товара $product_id размеры есть!");
+                    dump($sizes_options_row);
     
-                $size_option_value = $sizes_options_row['option_value'];
-                $size_option_name = my_mb_ucfirst($sizes_options_row['option_name']);
-                $size_option_id = $sizes_options_row['option_id'];
-                $size_option_value_id = $sizes_options_row['option_value_id'];
+                    unset($size_option_value, $size_option_name, $size_option_id, $size_option_value_id);
+                
+                    $size_option_value = $sizes_options_row['option_value'];
+                    $size_option_name = my_mb_ucfirst($sizes_options_row['option_name']);
+                    $size_option_id = $sizes_options_row['option_id'];
+                    $size_option_value_id = $sizes_options_row['option_value_id'];
                 
                 
-                //Здесь вставляем записи в базу
-                $check = $db->query("SELECT * FROM `oc_roz_unload_products` WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
-                if(!$check){
-                    $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
+                    //Здесь вставляем записи в базу
+                    $check = $db->query("SELECT * FROM `oc_roz_unload_products` WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
+                    if(!$check){
+                        $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
                                     `product_id`,
                                     `size_option_id`,
                                     `size_option_value_id`,
@@ -177,10 +189,10 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         '$color',
                                         '$stock_quantity',
                                         '$available')");
-                    dump($insert_id);
-                }
-                else{
-                    $db->query_update("UPDATE `oc_roz_unload_products` SET
+                        dump($insert_id);
+                    }
+                    else{
+                        $db->query_update("UPDATE `oc_roz_unload_products` SET
                                         `url`='$url',
                                         `price`='$price',
                                         `category_id`='$category_id',
@@ -198,16 +210,16 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         `stock_quantity`='$stock_quantity',
                                         `available`='$available'
                                         WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
-                    show("Товар $product_id уже существует и был обновлен");
-                }
-                //Здесь вставляем записи в базу КОНЕЦ
+                        show("Товар $product_id уже существует и был обновлен");
+                    }
+                    //Здесь вставляем записи в базу КОНЕЦ
                 
+                }
             }
-        }
-        else{
-            $check = $db->query("SELECT * FROM `oc_roz_unload_products` WHERE `product_id`='$product_id'");
-            if(!$check){
-                $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
+            else{
+                $check = $db->query("SELECT * FROM `oc_roz_unload_products` WHERE `product_id`='$product_id'");
+                if(!$check){
+                    $insert_id = $db->query_insert_id("INSERT INTO `oc_roz_unload_products` (
                                     `product_id`,
                                     `size_option_id`,
                                     `size_option_value_id`,
@@ -244,10 +256,10 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         '$color',
                                         '$stock_quantity',
                                         '$available')");
-                dump($insert_id);
-            }
-            else{
-                $db->query_update("UPDATE `oc_roz_unload_products` SET
+                    dump($insert_id);
+                }
+                else{
+                    $db->query_update("UPDATE `oc_roz_unload_products` SET
                                         `url`='$url',
                                         `price`='$price',
                                         `category_id`='$category_id',
@@ -262,14 +274,16 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
                                         `stock_quantity`='$stock_quantity',
                                         `available`='$available'
                                         WHERE `product_id`='$product_id'");
-                show("Товар $product_id уже существует и был обновлен");
-            }
+                    show("Товар $product_id уже существует и был обновлен");
+                }
             
+            }
+            //Получим опции фильтра КОНЕЦ
+            //Сформируем данные для вставки в таблицу КОНЕЦ
+            $cnt++;
         }
-        //Получим опции фильтра КОНЕЦ
-        //Сформируем данные для вставки в таблицу КОНЕЦ
-        $cnt++;
     }
+    
     dump($cnt);
     
 }

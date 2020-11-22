@@ -28,6 +28,9 @@ $db = new Db;
 $oc_roz_unload_products_result = $db->query("SELECT * FROM `oc_roz_unload_products`");
 
 while( $oc_roz_unload_products_row = mysqli_fetch_assoc($oc_roz_unload_products_result) ){
+    
+    unset($product_id, $size_option_id, $size_option_value_id);
+    
     $product_id = $oc_roz_unload_products_row['product_id'];
     $size_option_id = $oc_roz_unload_products_row['size_option_id'];
     $size_option_value_id = $oc_roz_unload_products_row['size_option_value_id'];
@@ -39,12 +42,19 @@ while( $oc_roz_unload_products_row = mysqli_fetch_assoc($oc_roz_unload_products_
         }
     }
     else{
-        
-        $oc_ocfilter_option_value_to_product_result = $db->query("SELECT * FROM `oc_product_option_value` WHERE `product_id`='$product_id' AND `option_id`='$size_option_id' AND `option_value_id`='$size_option_value_id'");
-       
-        if(!$oc_ocfilter_option_value_to_product_result){
-            $db->query_update("UPDATE `oc_roz_unload_products` SET available='false', `stock_quantity`='0' WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
+    
+        $oc_product_result = $db->query("SELECT * FROM `oc_product` WHERE `product_id`='$product_id' AND `status`='1' AND `quantity`>0");
+        if(!$oc_product_result){
+            $db->query_update("UPDATE `oc_roz_unload_products` SET available='false', `stock_quantity`='0' WHERE `product_id`='$product_id'");
         }
+        else{
+            $oc_ocfilter_option_value_to_product_result = $db->query("SELECT * FROM `oc_product_option_value` WHERE `product_id`='$product_id' AND `option_id`='$size_option_id' AND `option_value_id`='$size_option_value_id'");
+            if(!$oc_ocfilter_option_value_to_product_result){
+                $db->query_update("UPDATE `oc_roz_unload_products` SET available='false', `stock_quantity`='0' WHERE `product_id`='$product_id' AND `size_option_id`='$size_option_id' AND `size_option_value_id`='$size_option_value_id'");
+            }
+        }
+        
+        
     }
 }
 
