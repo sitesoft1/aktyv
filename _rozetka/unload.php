@@ -86,9 +86,9 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     }
     
     if($roz_ratio > 0){
-        $price = (int) $unload_products_row['price'] * $roz_ratio;
+        $price = (integer) $unload_products_row['price'] * $roz_ratio;
     }else{
-        $price = (int) $unload_products_row['price'];
+        $price = (integer) $unload_products_row['price'];
     }
     
     
@@ -180,6 +180,8 @@ while( $unload_products_row = mysqli_fetch_assoc($unload_products_rezult) ) {
     $description = str_ireplace('  ', ' ', $description);
     $description = str_ireplace('  ', ' ', $description);
     $description = trim($description);
+    $description = preg_replace('@((https?://)?([-\w]+\.[-\w\.]+)+\w(:\d+)?(/([-\w/_\.]*(\?\S+)?)?)*)@', '', $description);
+    $description = str_ireplace('Подробнее:', '', $description);
     
     //dump(mb_strlen($description));
    

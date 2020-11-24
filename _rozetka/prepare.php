@@ -68,14 +68,46 @@ while( $oc_category_row = mysqli_fetch_assoc($oc_category_result) ){
             $product_id = $oc_product_row['product_id'];
             $manufacturer_id = $oc_product_row['manufacturer_id'];
             $url = HTTPS_SERVER.$oc_product_row['keyword'];
-            $price = $oc_product_row['price'];
+            $price = (integer) $oc_product_row['price'];
             $name = $oc_product_row['product_name'];
             $description = $oc_product_row['product_description'];
-            $pictures = '<picture>'.HTTPS_SERVER.'image/'.$oc_product_row['image'].'</picture>';
+    
+            $image_name = '';
+            $pictures = '';
+            if( checkKirrilik($oc_product_row['image']) ){
+                $source = __DIR__ . '/../image/' . $oc_product_row['image'];
+                $image_name = md5($oc_product_row['image']) . '.jpg';
+                $dest = __DIR__ . '/../image/catalog/rozetka/' . $image_name;
+                if(!copy($source, $dest)) {
+                    echo "не удалось скопировать $source...\n";
+                    $pictures .= '<picture>' . HTTPS_SERVER . 'image/' . $oc_product_row['image'] . '</picture>';
+                }else{
+                    $pictures .= '<picture>' . HTTPS_SERVER . 'image/catalog/rozetka/' . $image_name . '</picture>';
+                }
+            }
+            else{
+                $pictures .= '<picture>' . HTTPS_SERVER . 'image/' . $oc_product_row['image'] . '</picture>';
+            }
+            
             $oc_product_image_result = $db->query("SELECT `image` FROM `oc_product_image` WHERE product_id='$product_id'");
             if($oc_product_image_result){
                 while( $oc_product_image_row = mysqli_fetch_assoc($oc_product_image_result) ){
-                    $pictures .= '<picture>'.HTTPS_SERVER.'image/'.$oc_product_image_row['image'].'</picture>';
+                    
+                    if( checkKirrilik($oc_product_image_row['image']) ){
+                        $source = __DIR__ . '/../image/' . $oc_product_image_row['image'];
+                        $image_name = md5($oc_product_image_row['image']) . '.jpg';
+                        $dest = __DIR__ . '/../image/catalog/rozetka/' . $image_name;
+                        if(!copy($source, $dest)) {
+                            echo "не удалось скопировать $source...\n";
+                            $pictures .= '<picture>' . HTTPS_SERVER . 'image/' . $oc_product_image_row['image'] . '</picture>';
+                        }else{
+                            $pictures .= '<picture>' . HTTPS_SERVER . 'image/catalog/rozetka/' . $image_name . '</picture>';
+                        }
+                    }
+                    else{
+                        $pictures .= '<picture>' . HTTPS_SERVER . 'image/' . $oc_product_image_row['image'] . '</picture>';
+                    }
+                    
                 }
             }
             $vendor = $oc_product_row['vendor'];

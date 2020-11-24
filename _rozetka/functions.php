@@ -265,5 +265,32 @@ function strip_tag_css($text){
     return $text;
 }
 
+function checkKirrilik($str){
+    if ( mb_detect_encoding($str) != "ASCII" ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function copyKirrilikImage($image){
+    
+    if( checkKirrilik($image) ){
+        $source = __DIR__ . '/../image/' . $image;
+        $image_name = md5($image) . '.jpg';
+        $dest = __DIR__ . '/../image/' . $image_name;
+        if(!copy($source, $dest)) {
+            echo "не удалось скопировать $source...\n";
+            return '<picture>' . HTTPS_SERVER . 'image/' . $image . '</picture>';
+        }else{
+            return '<picture>' . HTTPS_SERVER . 'image/' . $image_name . '</picture>';
+        }
+    }
+    else{
+        return '<picture>' . HTTPS_SERVER . 'image/' . $image . '</picture>';
+    }
+    
+}
+
 
 
